@@ -14,13 +14,14 @@ const chronometer = sequelize.define('chronometer', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-	creation_date:{
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+    createdAt: {
+        field: 'created_at',
+        type: Sequelize.DATE,
     }
 }, {
-    timestamps: false,
+    timestamps: true,
+    //don't want updatedAt
+    updatedAt: false,
     // disable the modification of table names; By default, sequelize will automatically
     // transform all passed model names (first parameter of define) into plural.
     freezeTableName: true,
