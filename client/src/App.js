@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Timer from './Components/Timer';
 import Buttons from './Components/Buttons';
 import * as timeServices from './Services/TimeServices';
+import isEmpty from 'validator/lib/isEmpty';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,13 +21,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
+  const initialValues = {
+    finish_time: "",
+    username: ""
+  }
   const classes = useStyles();
   const [time, setTime] = useState({hour:0, minute:0, second:0, milisecond:0});
   const [interv, setInterv] = useState();
   const [status, setStatus] = useState(0);
+  const [data, setData] = useState(initialValues);
   // Not started = 0
   // started = 1
   // stopped = 2
+
+
 
   const runTimer = () =>{
     
@@ -61,10 +69,35 @@ function App() {
     setStatus(2);
   }
 
+  const handleChangeInput = (e) => {
+    setData({
+      ...data,[e.target.name]: e.target.value
+    });
+  }
+
   const finishTime = () =>{
-    clearInterval(interv);
-    setStatus(0);
-    setTime({hour:0, minute:0, second:0, milisecond:0});
+
+    console.log(`${time.hour}:${time.minute}:${time.second}:${time.milisecond}`);
+    if (isEmpty(data.username)) {
+      console.log('no se puede registrar un tiempo sin haber ingresado username');
+      return;
+    }else{
+      let dataFinishTinme = `${time.hour}:${time.minute}:${time.second}`;
+      let finalData = {
+        finish_time : dataFinishTinme,
+        username: data.username
+      }
+
+      timeServices.createTime(finalData)
+        .then((response)=>{
+          console.log(response)
+
+        })
+        .catch((error)=>{
+          console.log('axios finishTime error: ', error);
+        })
+      
+    }
   }
 
 
@@ -81,8 +114,8 @@ function App() {
     //   </Grid>
     // </Grid>
     <div>
-      <label htmlFor="txtusername">Enter your name:</label>
-      <input type="text" name="txtusername" id="txtusername" />
+      <label htmlFor="username">Enter your name:</label>
+      <input type="text" name='username' id="txtusername" onChange={handleChangeInput} />
       <br />
       <Timer time={time}/>
       <Buttons status={status} function={{ startTime, stopTime , finishTime}}/>

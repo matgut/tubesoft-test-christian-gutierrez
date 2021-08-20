@@ -14,6 +14,11 @@ const sequelize = new Sequelize(
             require: 30000,
             idle: 10000 
         },
+    dialectOptions: {
+          dateStrings: true,
+          typeCast: true,
+        },
+    timezone: 'America/Santiago',
   }
 );
 

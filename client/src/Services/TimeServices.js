@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const createTime = async (data) =>{
+export const createTime = async (data) => {
     const config = {
         headers:{
             "content-type": "application/json"
@@ -13,4 +13,4 @@ const createTime = async (data) =>{
     return resp;
 }
 
-export default createTime;
+

@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const countRoutes = require('./routes/index');
 
 //middlewares
+app.use(cors());
 app.use(express.json());
 
 //config
