@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+const apiHost = process.env.REACT_APP_API_HOST
 
 export const createTime = async (data) => {
     const config = {
@@ -8,7 +8,7 @@ export const createTime = async (data) => {
         }
     }
 
-    const resp = await axios.post('http://localhost:4000/api/v1/times',data,config);
+    const resp = await axios.post(`${apiHost}/api/v1/times`,data,config);
 
     return resp;
 }

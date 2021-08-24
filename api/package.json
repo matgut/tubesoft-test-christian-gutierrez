@@ -1,14 +1,14 @@
 {
-  "name": "api",
+  "name": "prueba-tubesoft-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API prueba TUBESOFT",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Christiann Gutierrez",
   "license": "ISC",
   "dependencies": {
     "assert": "^2.0.0",
