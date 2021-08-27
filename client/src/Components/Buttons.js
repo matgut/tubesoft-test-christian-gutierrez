@@ -50,7 +50,7 @@ const Buttons = (props) => {
                         size="large"
                         className={classes.button}
                         startIcon={<PauseIcon style={{fontSize: 100 }}/>}
-                        onClick={() => props.function.startTime()}
+                        onClick={ (props.hasOwnProperty('functionPlay')) ? () => props.functionPlay() : console.log('function play no passed')}
                     /> : 
                     <Button 
                         variant="contained"
@@ -58,7 +58,7 @@ const Buttons = (props) => {
                         size="large"
                         className={classes.button}
                         startIcon={<PlayArrowIcon style={{fontSize: 100 }}/>}
-                        onClick={() => props.function.startTime()}
+                        onClick={(props.hasOwnProperty('functionPlay')) ? () => props.functionPlay() : () => console.log('function play no passed')}
                     />
                 }
                 <Button 
@@ -67,7 +67,7 @@ const Buttons = (props) => {
                     size="large"
                     className={classes.button}
                     startIcon={<StopIcon style={{fontSize: 100 }}/>}
-                    onClick={() => props.function.stopTime()}
+                    onClick={(props.hasOwnProperty('functionStop')) ? () => props.functionStop() : () => console.log('function stop no passed')}
                 />
                 <Button 
                     variant="contained"
@@ -75,13 +75,9 @@ const Buttons = (props) => {
                     size="large"
                     className={classes.button}
                     startIcon={<DoneIcon style={{fontSize: 100 }}/>}
-                    onClick={() => props.function.finishTime()}
+                    onClick={(props.hasOwnProperty('functionFinish')) ? () => props.functionFinish() : () => console.log('function finish no passed')}
                 />
             </ButtonGroup>
-            
-            <button onClick={() => props.function.startTime()}>start</button>
-            <button onClick={() => props.function.stopTime()}>stop</button>
-            <button onClick={() => props.function.finishTime()}>finish</button>
         </Grid>
     )
 }

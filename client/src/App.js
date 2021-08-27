@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-//import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
 //import Paper from '@material-ui/core/Paper';
 import Timer from './Components/Timer';
 import Buttons from './Components/Buttons';
 import * as timeServices from './Services/TimeServices';
 import isEmpty from 'validator/lib/isEmpty';
+import { FormControl, InputLabel, Input } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-  },
-  paper: {
-    height: 140,
-    width: 100,
   },
   control: {
     padding: theme.spacing(2),
@@ -30,6 +29,8 @@ function App() {
   const [interv, setInterv] = useState();
   const [status, setStatus] = useState(0);
   const [data, setData] = useState(initialValues);
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState({content: '', typeAlert: ''});
   // Not started = 0
   // started = 1
   // stopped = 2
@@ -79,7 +80,11 @@ function App() {
 
     console.log(`${time.hour}:${time.minute}:${time.second}:${time.milisecond}`);
     if (isEmpty(data.username)) {
-      console.log('no se puede registrar un tiempo sin haber ingresado username');
+      setAlert(true);
+      setAlertContent({
+        content: 'Unable to register for some time without having entered username',
+        typeAlert: 'error'
+      });
       return;
     }else{
       let dataFinishTinme = `${time.hour}:${time.minute}:${time.second}`;
@@ -91,7 +96,13 @@ function App() {
       timeServices.createTime(finalData)
         .then((response)=>{
           console.log(response)
-
+          if(response.code === 0){
+            setAlert(true);
+            setAlertContent({
+              content: response.message,
+              typeAlert: 'success'
+            });
+          }
         })
         .catch((error)=>{
           console.log('axios finishTime error: ', error);
@@ -102,24 +113,16 @@ function App() {
 
 
   return (
-    // <Grid container className={classes.root} spacing={2}>
-    //   <Grid item xs={12}>
-    //     <Grid container justifyContent="center" spacing={spacing}>
-    //       {[0, 1, 2].map((value) => (
-    //         <Grid key={value} item>
-    //           <Paper className={classes.paper} />
-    //         </Grid>
-    //       ))}
-    //     </Grid>
-    //   </Grid>
-    // </Grid>
-    <div>
-      <label htmlFor="username">Enter your name:</label>
-      <input type="text" name='username' id="txtusername" onChange={handleChangeInput} />
-      <br />
+    <Grid container justifyContent = "center" className={classes.root}>
+      <FormControl>
+        <InputLabel htmlFor="my-input">Enter your name:</InputLabel>
+        <Input id="username" name="username" onChange={handleChangeInput} />
+      </FormControl>
       <Timer time={time}/>
-      <Buttons status={status} function={{ startTime, stopTime , finishTime}}/>
-    </div>
+      <Buttons status={status} functionPlay={startTime} functionStop={stopTime} functionFinish={finishTime}/>
+      {alert ? <Alert variant="filled" severity={alertContent.typeAlert}  onClose={() => {setAlert(false)}}>{alertContent.content}</Alert> : <></> }
+    </Grid>
+    
   );
 }
 
