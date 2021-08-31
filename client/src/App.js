@@ -24,8 +24,10 @@ function App() {
     finish_time: "",
     username: ""
   }
+
+  const initialValuesTime={hour:0, minute:0, second:0, milisecond:0}
   const classes = useStyles();
-  const [time, setTime] = useState({hour:0, minute:0, second:0, milisecond:0});
+  const [time, setTime] = useState(initialValuesTime);
   const [interv, setInterv] = useState();
   const [status, setStatus] = useState(0);
   const [data, setData] = useState(initialValues);
@@ -76,6 +78,12 @@ function App() {
     });
   }
 
+  const resetValues = () =>{
+    setTime(initialValuesTime);
+    setData(initialValues);
+    setStatus(0);
+  }
+
   const finishTime = () =>{
 
     console.log(`${time.hour}:${time.minute}:${time.second}:${time.milisecond}`);
@@ -95,17 +103,21 @@ function App() {
 
       timeServices.createTime(finalData)
         .then((response)=>{
-          console.log(response)
-          if(response.code === 0){
+          if(response.data.code === 0){
             setAlert(true);
             setAlertContent({
-              content: response.message,
+              content: response.data.message,
               typeAlert: 'success'
             });
+            resetValues();
           }
         })
         .catch((error)=>{
           console.log('axios finishTime error: ', error);
+          setAlertContent({
+            content: 'axios finishTime error: ',
+            typeAlert: 'error'
+          });
         })
       
     }
@@ -116,11 +128,11 @@ function App() {
     <Grid container justifyContent = "center" className={classes.root}>
       <FormControl>
         <InputLabel htmlFor="my-input">Enter your name:</InputLabel>
-        <Input id="username" name="username" onChange={handleChangeInput} />
+        <Input id="username" name="username" onChange={handleChangeInput} value={data.username} />
       </FormControl>
       <Timer time={time}/>
       <Buttons status={status} functionPlay={startTime} functionStop={stopTime} functionFinish={finishTime}/>
-      {alert ? <Alert variant="filled" severity={alertContent.typeAlert}  onClose={() => {setAlert(false)}}>{alertContent.content}</Alert> : <></> }
+      {alert ? <Alert variant="filled" severity={alertContent.typeAlert} onClose={() => {setAlert(false)}}>{alertContent.content}</Alert> : <></> }
     </Grid>
     
   );
